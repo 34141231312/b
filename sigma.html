@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Open Link in about:blank</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+    }
+    input[type="text"] {
+        width: 300px;
+        padding: 8px;
+        font-size: 14px;
+    }
+    button {
+        padding: 8px 12px;
+        font-size: 14px;
+        cursor: pointer;
+    }
+</style>
+</head>
+<body>
+
+<h2>Open Link in about:blank Page</h2>
+<input type="text" id="urlInput" placeholder="Enter URL (e.g., https://example.com)">
+<button onclick="openInBlank()">Open</button>
+
+<script>
+function openInBlank() {
+    let url = document.getElementById("urlInput").value.trim();
+
+    // Basic validation
+    if (!url) {
+        alert("Please enter a URL.");
+        return;
+    }
+    if (!/^https?:\/\//i.test(url)) {
+        url = "https://" + url; // Auto-add https:// if missing
+    }
+
+    // Open a new about:blank tab
+    let newWin = window.open("about:blank", "_blank");
+
+    if (newWin) {
+        // Write an iframe into the new tab
+        newWin.document.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Custom about:blank</title>
+                <style>
+                    html, body {
+                        margin: 0;
+                        padding: 0;
+                        height: 100%;
+                        overflow: hidden;
+                    }
+                    iframe {
+                        border: none;
+                        width: 100%;
+                        height: 100%;
+                    }
+                </style>
+            </head>
+            <body>
+                <iframe src="${url}" allowfullscreen></iframe>
+            </body>
+            </html>
+        `);
+        newWin.document.close();
+    } else {
+        alert("Popup blocked! Please allow popups for this site.");
+    }
+}
+</script>
+
+</body>
+</html>
